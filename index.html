@@ -64,25 +64,62 @@
 <div id="main"></div>
 <div id="scores"></div>
 <script>
-(function()
+var getgame = (function()
 {
-var c=document.getElementById("game");
-var ctx=c.getContext("2d");
-ctx.fillStyle="#FF0000";
-ctx.fillRect(0,0,150,75);
-var c=document.getElementById("game");
-var ctx=c.getContext("2d");
+	var timeoutVar = 10 , counter = 0;
 
-// Create gradient
-var grd=ctx.createRadialGradient(75,50,5,90,60,100);
-grd.addColorStop(0,"red");
-grd.addColorStop(1,"blue");
 
-// Fill with gradient
-ctx.fillStyle=grd;
-ctx.fillRect(10,10,150,80);
+	function start()
+	{
+		
+		var canvas =document.getElementById("game");
+    	canvas.width = 480;
+        canvas.height = 320;
+		var ctx=canvas.getContext("2d");
+		var ballx = Math.ceil(Math.random() * 100);
+		var bally = Math.ceil(Math.random() * 80);
+		
+		/*
+     	ctx.fillStyle="#FF0000";
+		ctx.fillRect(0,0,150,75);
+
+		// Create gradient
+		var grd=ctx.createRadialGradient(75,50,5,90,60,100);
+		grd.addColorStop(0,"red");
+		grd.addColorStop(1,"blue");
+
+		// Fill with gradient
+		ctx.fillStyle=grd;
+		ctx.fillRect(10,10,150,80);
+		*/
+
+		var ctx=canvas.getContext("2d");
+		ctx.beginPath();
+		ctx.fillStyle="red";
+		ctx.arc(ballx,bally,50,0,Math.PI*2,true);
+		ctx.fill();
+		ctx.stroke();
+		
+		if (counter > 10)
+		{
+
+		}else
+		{
+		     	timeoutVar = setTimeout(start, 1000);
+                counter = counter + 1;
+            
+                console.log("Counter: " + counter);
+
+		}
+			}
+	return {
+		start:start,
+		//gameover:g
+	}	
+	//start();
 })
 ();
+getgame.start();
 </script>
 </body>
 </html>
