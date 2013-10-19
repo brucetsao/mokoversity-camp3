@@ -54,7 +54,35 @@
 </nav>
 
  <p>A hello world ...</p>
+ <div class="row">
+	<div class="col-md-12">
+		</div id = "main">
+				<canvas id = "game"></canvas>
+		</div>
+	</div>
+ </div>
 <div id="main"></div>
 <div id="scores"></div>
+<script>
+(function()
+{
+var c=document.getElementById("game");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#FF0000";
+ctx.fillRect(0,0,150,75);
+var c=document.getElementById("game");
+var ctx=c.getContext("2d");
+
+// Create gradient
+var grd=ctx.createRadialGradient(75,50,5,90,60,100);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"blue");
+
+// Fill with gradient
+ctx.fillStyle=grd;
+ctx.fillRect(10,10,150,80);
+})
+();
+</script>
 </body>
 </html>
