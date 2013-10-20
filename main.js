@@ -1,65 +1,86 @@
-var gameModule = (function() {
+var bubble = (function(document, $) {
+	var ballX,
+		ballY,
+		radi;
 
-        var timeoutVar,
-                counter = 0,
-                ballX,
-                ballY,
-                ballR,
-                scores,
-                colors = ['#ff0000', '#0000ff', 'yellow'],
-                length = colors.length;
+	var canvasWidth,
+		canvasHeight;
 
-        function touchEvent(evt) {
-                var x = evt.clientX,
-                        y = evt.clientY,
-                        tmp = (ballX - x) * (ballX - x) + (ballY - y) * (ballY - y);
+	var timeoutVar,
+		counter;
 
-                console.log("Clicked: " + x + " , " + y);
+	var scores;
 
-                if (tmp < ballR*ballR) {
-                        scores = scores + (100 - ballR);
-                        console.log("Hit ! Your scores: " + scores);
-                }
-        }
+	function drawBall() {
+		var canvas = document.getElementById('board');
 
-        function start() {
-                scores = 0;
+		var background = $('#game-screen')[0],
+			rect = background.getBoundingClientRect();
 
-                document.getElementById("main").addEventListener("click", touchEvent, false);
-                startGame();                
-        }
+		var ctx = canvas.getContext('2d');
 
-        function startGame() {
-        var canvas = document.getElementById('game');
-        var ctx = canvas.getContext('2d');
-            
-            ballX = Math.floor(Math.random() * 600); // 0..300
-            ballY = Math.floor(Math.random() * 450);
-            ballR = Math.floor(Math.random() * 80);
+		canvas.width = rect.width;
+		canvas.height = rect.height;
 
-        canvas.width = 640;
-        canvas.height = 480;
+		canvasWidth = rect.width;
+		canvasHeight = rect.height;
 
-        ctx.fillStyle = colors[counter % length];
-        ctx.beginPath();
-        ctx.arc(ballX, ballY, ballR, 0, Math.PI * 2 , true);
-        ctx.fill();
+		ballX = Math.floor(Math.random() * 300);
+		ballY = Math.floor(Math.random() * 500);
+		radi = Math.floor(Math.random() * 100) + 30;
 
-        if (counter >= 10) {
-                gameOver();
-        } else {
-                timeoutVar = setTimeout(startGame, 2000);
-                counter = counter + 1;
-            } 
-        }
+		ctx.fillStyle = 'black';
+		ctx.beginPath();
+		ctx.arc(ballX, ballY, radi, 0, Math.PI * 2, true);
+		ctx.fill();
 
-        function gameOver() {
-        console.log("Final: " + scores);
-        }
+		if (counter >= 10) {
+			clearTimeout(timeoutVar);
+		} else {
+			counter = counter + 1;
+			timeoutVar = setTimeout(drawBall, 1000);
+		}
+	}
 
-        return {
-                start: start
-        }
-}) ();
+	function touchEvent(evt) {
+		console.log('clicked: ' + evt.clientX + " , " + evt.clientY);
 
-gameModule.start();
+        var x1, 
+            x2,
+            y1,
+            y2;
+
+        // 四個角
+		x1 = ballX - radi;
+		x2 = ballX + radi;		
+		y1 = ballY - radi;
+		y2 = ballY + radi;	
+
+		// 是否擊中
+		if ((evt.clientX > x1) && (evt.clientX < x2)) {
+			if ((evt.clientY > y1) && (evt.clientY < y2)) {
+				scores = scores + (canvasWidth - radi);
+
+				console.log("Hit. Scores: " + scores);
+			}
+		}
+
+		// prevent default
+		evt.preventDefault();			
+	}
+
+	function start() {
+		counter = 1;
+		scores = 0;
+
+		document.getElementById("game-screen").
+					addEventListener("click", touchEvent, false);
+
+		timeoutVar = setTimeout(drawBall, 1000);
+	}
+
+	return {
+		start: start
+	}
+
+}) (document, Sizzle);
